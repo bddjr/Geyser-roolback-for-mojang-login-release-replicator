@@ -36,11 +36,11 @@ cp("Spigot")
 cp("Standalone")
 cp("Velocity")
 
-'''
+if not os.path.exists("./test-Standalone/"):
+    os.mkdir("./test-Standalone/")
 shutil.copy(
     in_path("Standalone") ,
     out_path("Standalone", "./test-Standalone/")
 )
-'''
 
 print("OK!")

@@ -1,2 +1,4 @@
 dist
-test-Standalone
+!/test-Standalone
+/test-Standalone/*
+!/test-Standalone/start.bat

@@ -1,46 +1,37 @@
-dist_dir = "./dist/"
+import shutil, os, glob
 
-import shutil, os
+def exists_remove(path):
+    if os.path.exists(path):
+        if os.path.isdir(path):
+            shutil.rmtree(path)
+        else:
+            os.remove(path)
+        return True
+    return False
 
-def in_path(name):
-    return os.path.abspath(
-        "../Geyser-roolback-for-mojang-login/bootstrap/" +
-        str.lower(name) +
-        "/build/libs/Geyser-" +
-        name +
-        ".jar"
-    )
+def make_clear_dir(path):
+    exists_remove(path)
+    os.mkdir(path)
 
-def out_path(name, dist_dir = dist_dir):
-    return os.path.abspath(
-        dist_dir +
-        "Geyser-roolback-for-mojang-login-" +
-        name +
-        ".jar"
-    )
-
-def cp(name):
-    shutil.copy(
-        in_path(name) ,
-        out_path(name)
-    )
-
-if os.path.exists(dist_dir):
-    shutil.rmtree(dist_dir)
-os.mkdir(dist_dir)
+def not_exists_mkdir(path):
+    if not os.path.exists(path):
+        os.mkdir(path)
+        return True
+    return False
 
 
-cp("BungeeCord")
-cp("Fabric")
-cp("Spigot")
-cp("Standalone")
-cp("Velocity")
+make_clear_dir("dist/")
 
-if not os.path.exists("./test-Standalone/"):
-    os.mkdir("./test-Standalone/")
-shutil.copy(
-    in_path("Standalone") ,
-    out_path("Standalone", "./test-Standalone/")
-)
+not_exists_mkdir("test-Standalone/") or exists_remove("test-Standalone/Geyser-roolback-for-mojang-login-Standalone.jar")
+
+
+for i in glob.glob("../Geyser-roolback-for-mojang-login/bootstrap/*/build/libs/Geyser-*"):
+    name_ends = i[i.rfind('-') : ]
+    out_name = "dist/Geyser-roolback-for-mojang-login" + name_ends
+    print(out_name)
+    shutil.copy(i, out_name)
+    if name_ends == "-Standalone.jar":
+        shutil.copy(i, "test-Standalone/Geyser-roolback-for-mojang-login-Standalone.jar")
+
 
 print("OK!")
